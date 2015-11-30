@@ -1,0 +1,35 @@
+<!doctype html>
+<!--suppress HtmlUnknownTarget -->
+<html>
+<head>
+    <title>Страница заказов</title>
+    <!--AngularJS-->
+    <script src="vendor/angularjs/angular.min.js"></script>
+
+    <!--jQuery-->
+    <script src="vendor/jquery/dist/jquery.js"></script>
+    <!--Bootstrap-->
+    <link href="vendor/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!--Angular Scripts-->
+    <script src="js/app.js"></script>
+    <script src="js/controller/OrderController.js"></script>
+    <script src="js/directive/editModal.js"></script>
+    <script src="js/directive/ordersTable.js"></script>
+
+    <!--General-->
+    <link href="css/main.css" rel="stylesheet">
+</head>
+
+<body ng-app="ordersApp" ng-controller="OrderController as orderCtrl">
+
+<input type="text" class="form-control" ng-model="orderCtrl.searchQuery"
+       id="searchQueryInput" title="Поиск" placeholder="Поиск по заказам">
+
+<orders-table></orders-table>
+
+<edit-modal></edit-modal>
+
+</body>
+</html>

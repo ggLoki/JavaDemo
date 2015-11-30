@@ -1,0 +1,13 @@
+{
+  "name": "nevolin",
+  "version": "0.1.0",
+  "authors": [
+    "Nevolin <nevolin@lightsoft.ru>"
+  ],
+  "description": "Simple Java demo project",
+  "license": "MIT",
+  "dependencies": {
+    "angularjs": "~1.4.8",
+    "bootstrap": "~3.3.6"
+  }
+}

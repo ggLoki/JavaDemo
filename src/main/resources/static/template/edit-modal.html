@@ -1,0 +1,49 @@
+<div class="modal fade" id="dealFormModal" tabindex="-1" role="dialog" aria-labelledby="dealFormLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="dealFormLabel">
+                    <span ng-if="currentDeal.order.id">Редактирование заказа №{{currentDeal.order.id}}</span>
+                    <span ng-if="!currentDeal.order.id">Создание нового заказа</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form name="orderForm" novalidate>
+                    <div class="form-group">
+                        <label for="infoInput">Информация о заказе</label>
+                        <textarea class="form-control" rows="2" id="infoInput"
+                                  ng-model="currentDeal.order.info"></textarea>
+                    </div>
+                    <label for="clientsTable">Заказчики</label>
+                    <table id="clientsTable">
+                        <thead>
+                        <tr>
+                            <th>Имя</th>
+                            <th>Фамилия</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="client in currentDeal.clients track by $index">
+                            <td style="padding-right: 10px; padding-bottom: 10px;">
+                                <input type="text" class="form-control" id="firstNameInput" ng-model="client.firstName" required>
+                            </td>
+                            <td style="padding-right: 10px; padding-bottom: 10px;">
+                                <input type="text" class="form-control" id="lastNameInput" ng-model="client.lastName" required>
+                            </td>
+                            <td>
+                                <a href="#" ng-show="$index" ng-click="orderCtrl.removeLastClient(currentDeal)"><span class="glyphicon glyphicon-remove"></span></a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-primary" ng-click="orderCtrl.addEmptyClient(currentDeal)" value="Добавить клиента">
+                <input type="button" class="btn btn-primary" ng-click="orderCtrl.saveDeal()" ng-disabled="!orderForm.$valid" value="Сохранить изменения">
+            </div>
+        </div>
+    </div>
+</div>
