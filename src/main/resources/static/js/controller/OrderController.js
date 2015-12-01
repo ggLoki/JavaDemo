@@ -57,7 +57,7 @@ app.controller('OrderController', function ($scope, $http) {
     };
 
     this.removeOrder = function (order) {
-        $http.post('/api/orders/remove', order).success(function() {
+        $http.post('/api/orders/remove', order.id).success(function() {
             $scope.updateOrders();
         });
     };

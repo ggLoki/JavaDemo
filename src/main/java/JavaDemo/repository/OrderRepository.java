@@ -12,7 +12,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface OrderRepository extends PagingAndSortingRepository<Order, Long> {
+public interface OrderRepository extends PagingAndSortingRepository<Order, Integer> {
     Page<Order> findAllByOrderByIdDesc(Pageable pageable);
     Page<Order> findAllByInfoLikeOrderByIdDesc(Pageable pageable, String info);
 }

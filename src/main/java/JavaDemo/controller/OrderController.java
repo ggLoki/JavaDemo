@@ -40,7 +40,7 @@ public class OrderController {
 
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
-    public void removeOrder(@RequestBody Order order) {
-        orderRepository.delete(order);
+    public void removeOrder(@RequestBody int id) {
+        orderRepository.delete(id);
     }
 }
