@@ -12,49 +12,26 @@ app.controller('OrderController', function ($scope, $http) {
 
 
     //region Paginator
-    $http.post('/api/orders/page/size').success(function (response) {
-        $scope.pageSize = parseInt(response);
-    });
-
     $scope.currentPage = 0;
 
-    this.firstPage = function () {
-        return $scope.currentPage == 0;
-    };
-    this.lastPage = function () {
-        var lastPageNum = Math.ceil($scope.ordersCount / $scope.pageSize - 1);
-        return $scope.currentPage == lastPageNum;
-    };
-
-    this.numberOfPages = function () {
-        return Math.ceil($scope.ordersCount / $scope.pageSize);
-    };
     this.pageBack = function () {
         $scope.currentPage--;
-        loadOrders();
+        $scope.updateOrders();
     };
     this.pageForward = function () {
         $scope.currentPage++;
-        loadOrders();
+        $scope.updateOrders();
     };
     //endregion
 
-    this.updateSearchQuery = function() {
-        $http.post('/api/orders/searchquery', 'infoSearchQuery=' + $scope.searchQuery).success(function () {
-            loadOrders();
-        });
+    $scope.updateOrders = function() {
+        $http.get('/api/orders/page/?page=' + $scope.currentPage + "&" + 'infoSearchQuery=' + $scope.searchQuery)
+            .success(function (data) {
+                $scope.ordersPage = data;
+            });
     };
 
-    function loadOrders() {
-        $http.post('/api/orders/page/' + $scope.currentPage).success(function (data) {
-            $scope.ordersList = data;
-        });
-        $http.post('/api/orders/count').success(function (response) {
-            $scope.ordersCount = parseInt(response);
-        });
-    }
-
-    loadOrders();
+    $scope.updateOrders();
 
     this.editOrderModal = function (order) {
         $scope.currentOrder = angular.copy(this.emptyOrder);
@@ -66,10 +43,11 @@ app.controller('OrderController', function ($scope, $http) {
     };
 
     this.saveOrder = function () {
+        console.log($scope.currentOrder);
         $http.post('/api/orders/save', $scope.currentOrder)
             .then(function successCallback() {
                 if (!$scope.currentOrder.id) {
-                    loadOrders();
+                    $scope.updateOrders();
                 }
                 $('#orderFormModal').modal('hide');
             }, function errorCallback(response) {
@@ -79,8 +57,8 @@ app.controller('OrderController', function ($scope, $http) {
     };
 
     this.removeOrder = function (order) {
-        $http.post('/api/orders/remove', order).then(function successCallback() {
-            loadOrders();
+        $http.post('/api/orders/remove', order).success(function() {
+            $scope.updateOrders();
         });
     };
 
@@ -91,24 +69,5 @@ app.controller('OrderController', function ($scope, $http) {
     this.removeLastClient = function (order) {
         order.clients.pop();
     };
-
-    //this.getFilteredOrders = function () {
-    //    var searchQuery = this.searchQuery;
-    //    var filteredOrders = [];
-    //
-    //    if (this.searchQuery) {
-    //        $scope.ordersList.forEach(function (order) {
-    //            if (order.info.indexOf(searchQuery) > -1) {
-    //                filteredOrders.push(order);
-    //            }
-    //        });
-    //    }
-    //    else filteredOrders = $scope.ordersList;
-    //    filteredOrders.sort(function (a, b) {
-    //        return a.id < b.id;
-    //    });
-    //
-    //    return filteredOrders;
-    //};
 
 });

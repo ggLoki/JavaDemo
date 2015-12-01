@@ -6,15 +6,13 @@ package JavaDemo.repository;
  */
 
 import JavaDemo.domain.Order;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface OrderRepository extends PagingAndSortingRepository<Order, Long> {
-    List<Order> findAllByOrderByIdDesc(Pageable pageable);
-    List<Order> findAllByInfoLikeOrderByIdDesc(Pageable pageable, String info);
-    Long countByInfoLike(String info);
+    Page<Order> findAllByOrderByIdDesc(Pageable pageable);
+    Page<Order> findAllByInfoLikeOrderByIdDesc(Pageable pageable, String info);
 }

@@ -8,7 +8,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="order in ordersList">
+    <tr ng-repeat="order in ordersPage.content">
         <td ng-click="orderCtrl.editOrderModal(order)">{{ order.id }}</td>
         <td ng-click="orderCtrl.editOrderModal(order)">{{ order.info }}</td>
         <td ng-click="orderCtrl.editOrderModal(order)">{{ order.clients[0].firstName }}</td>
@@ -20,10 +20,10 @@
 
 <div id="pagination" class="row">
     <button class="btn btn-primary btn-sm"
-            ng-disabled="orderCtrl.firstPage()" ng-click="orderCtrl.pageBack()">Назад</button>
-    <span>{{ currentPage + 1 }} из {{ orderCtrl.numberOfPages() }}</span>
+            ng-disabled="ordersPage.first" ng-click="orderCtrl.pageBack()">Назад</button>
+    <span>{{ currentPage + 1 }} из {{ ordersPage.totalPages }}</span>
     <button class="btn btn-primary btn-sm"
-            ng-disabled="orderCtrl.lastPage()" ng-click="orderCtrl.pageForward()">Вперед</button>
+            ng-disabled="ordersPage.last" ng-click="orderCtrl.pageForward()">Вперед</button>
 </div>
 
 <input type="button" class="btn btn-default act-add-order" ng-click="orderCtrl.editOrderModal()" value="Добавить заказ">

@@ -5,13 +5,12 @@ package JavaDemo.controller;
 
 import JavaDemo.domain.Order;
 import JavaDemo.repository.OrderRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @RestController
@@ -20,46 +19,19 @@ public class OrderController {
 
     @Inject
     OrderRepository orderRepository;
-    private int pageSize = 5;
-    private String infoSearchQuery= "";
+    private final int pageSize = 5;
 
-    @RequestMapping(value = "/page/{page}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List getPage(@PathVariable("page") int page) {
-        List<Order> result = new ArrayList<>();
-        Iterable<Order> allOrders;
-        if (this.infoSearchQuery.isEmpty()) {
-            allOrders = orderRepository.findAllByOrderByIdDesc(new PageRequest(page, pageSize));
+    @RequestMapping(value = "/page", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Page<Order> getPage(@RequestParam int page, @RequestParam String infoSearchQuery) {
+        if (infoSearchQuery.isEmpty()) {
+            return orderRepository.findAllByOrderByIdDesc(new PageRequest(page, pageSize));
         }
         else {
-            allOrders = orderRepository.findAllByInfoLikeOrderByIdDesc(
-                    new PageRequest(page, pageSize), '%' + this.infoSearchQuery + '%');
-        }
-        for (Order o: allOrders) {
-            result.add(o);
-        }
-        return result;
-    }
-
-    @RequestMapping(value = "/searchquery", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public void setInfoSearchQuery(@RequestParam String infoSearchQuery) {
-        this.infoSearchQuery = infoSearchQuery;
-    }
-
-    @RequestMapping(value = "/page/size", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public long getPageSize() {
-        return this.pageSize;
-    }
-
-    @RequestMapping(value = "/count", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public long getOrdersCount() {
-        if (this.infoSearchQuery.isEmpty()) {
-            return orderRepository.count();
-        }
-        else {
-            return orderRepository.countByInfoLike('%' + this.infoSearchQuery + '%');
+            return orderRepository.findAllByInfoLikeOrderByIdDesc(
+                    new PageRequest(page, pageSize), '%' + infoSearchQuery + '%'
+            );
         }
     }
-
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public Order saveOrder(@RequestBody Order order) {

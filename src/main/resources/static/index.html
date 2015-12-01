@@ -24,7 +24,7 @@
 
 <body ng-app="ordersApp" ng-controller="OrderController as orderCtrl">
 
-<input type="text" class="form-control" ng-model="searchQuery" ng-change="orderCtrl.updateSearchQuery()"
+<input type="text" class="form-control" ng-model="searchQuery" ng-change="orderCtrl.updateOrders()"
        id="searchQueryInput" title="Поиск" placeholder="Поиск по заказам">
 
 <orders-table></orders-table>
