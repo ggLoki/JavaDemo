@@ -17,10 +17,10 @@ public class Client {
     @Column(name = "id", columnDefinition = "serial")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Generated(GenerationTime.INSERT)
-    private long id;
+    private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", columnDefinition = "int4")
+    @JoinColumn(name = "order_id")
     private Order order;
 
     @Column(name = "first_name", nullable = false)
@@ -38,11 +38,11 @@ public class Client {
         this.order = order;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

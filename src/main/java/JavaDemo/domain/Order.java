@@ -5,11 +5,13 @@ package JavaDemo.domain;
  * Created by Неволин on 27.11.2015.
  */
 
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.OrderBy;
+
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.GenerationTime;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
 import java.util.Set;
 
 @Entity(name = "simple_order")
@@ -19,14 +21,15 @@ public class Order {
     @Column(name = "id", columnDefinition = "serial")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Generated(GenerationTime.INSERT)
-    private Long id;
+    private int id;
 
     @Column(name = "info", nullable = false)
     private String info;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
     @Cascade(value={org.hibernate.annotations.CascadeType.ALL})
-    @OrderBy(clause = "id desc")
+    @OrderBy("id desc")
+    @BatchSize(size = 100)
     private Set<Client> clients;
 
     public Order() {
@@ -36,7 +39,7 @@ public class Order {
         this.info = info;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
@@ -48,7 +51,7 @@ public class Order {
         this.info = info;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
