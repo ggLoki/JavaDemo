@@ -1,7 +1,5 @@
-//noinspection JSUnresolvedFunction
 var app = angular.module('ordersApp', []);
 
-// TODO: Realize some logic or remove this shit
-app.controller('orderEditController', function() {
-
-});
+app.config(['$httpProvider', function ($httpProvider) {
+    $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+}]);

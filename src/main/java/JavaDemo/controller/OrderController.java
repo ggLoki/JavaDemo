@@ -1,23 +1,17 @@
 /**
- * This controller using for all actions with orders & deals.
- * It a little ambiguous and should be refactored, I think.
+ * This controller using for all actions with orders.
  */
 package JavaDemo.controller;
 
 import JavaDemo.domain.Order;
-import JavaDemo.model.DealModel;
-import JavaDemo.repository.ClientRepository;
 import JavaDemo.repository.OrderRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 @RestController
@@ -26,22 +20,46 @@ public class OrderController {
 
     @Inject
     OrderRepository orderRepository;
+    private int pageSize = 5;
+    private String infoSearchQuery= "";
 
-    @Inject
-    ClientRepository clientRepository;
-
-    @RequestMapping(value = "/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List getAll() {
-        List<Map> result = new ArrayList<>();
-        Iterable<Order> allOrders = orderRepository.findAll();
-
-        for (Order order : allOrders) {
-            DealModel deal = new DealModel(order, clientRepository.findByOrderId(order.getId().intValue()));
-            result.add(deal.toMap());
+    @RequestMapping(value = "/page/{page}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List getPage(@PathVariable("page") int page) {
+        List<Order> result = new ArrayList<>();
+        Iterable<Order> allOrders;
+        if (this.infoSearchQuery.isEmpty()) {
+            allOrders = orderRepository.findAllByOrderByIdDesc(new PageRequest(page, pageSize));
         }
-
+        else {
+            allOrders = orderRepository.findAllByInfoLikeOrderByIdDesc(
+                    new PageRequest(page, pageSize), '%' + this.infoSearchQuery + '%');
+        }
+        for (Order o: allOrders) {
+            result.add(o);
+        }
         return result;
     }
+
+    @RequestMapping(value = "/searchquery", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public void setInfoSearchQuery(@RequestParam String infoSearchQuery) {
+        this.infoSearchQuery = infoSearchQuery;
+    }
+
+    @RequestMapping(value = "/page/size", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public long getPageSize() {
+        return this.pageSize;
+    }
+
+    @RequestMapping(value = "/count", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public long getOrdersCount() {
+        if (this.infoSearchQuery.isEmpty()) {
+            return orderRepository.count();
+        }
+        else {
+            return orderRepository.countByInfoLike('%' + this.infoSearchQuery + '%');
+        }
+    }
+
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public Order saveOrder(@RequestBody Order order) {
@@ -51,10 +69,6 @@ public class OrderController {
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     public void removeOrder(@RequestBody Order order) {
-        // This shit is needed, because normal deleteByOrderId don't working. Dunno, why.
-        clientRepository.delete(
-                clientRepository.findByOrderId(order.getId().intValue())
-        );
         orderRepository.delete(order);
     }
 }

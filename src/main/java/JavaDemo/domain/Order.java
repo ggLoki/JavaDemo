@@ -5,10 +5,12 @@ package JavaDemo.domain;
  * Created by Неволин on 27.11.2015.
  */
 
-import org.hibernate.annotations.Generated;
-import org.hibernate.annotations.GenerationTime;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.OrderBy;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import java.util.Set;
 
 @Entity(name = "simple_order")
 public class Order {
@@ -21,6 +23,11 @@ public class Order {
 
     @Column(name = "info", nullable = false)
     private String info;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
+    @Cascade(value={org.hibernate.annotations.CascadeType.ALL})
+    @OrderBy(clause = "id desc")
+    private Set<Client> clients;
 
     public Order() {
     }
@@ -43,5 +50,16 @@ public class Order {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Set<Client> getClients() {
+        return clients;
+    }
+
+    public void setClients(Set<Client> clients) {
+        for (Client c: clients) {
+            c.setOrder(this);
+        }
+        this.clients = clients;
     }
 }

@@ -8,13 +8,12 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="deal in orderCtrl.getFilteredDeals() | limitTo: orderCtrl.itemsPerPage : orderCtrl.startItem()"
-            ng-click="orderCtrl.editDealModal(deal)">
-        <td>{{ deal.order.id }}</td>
-        <td>{{ deal.order.info }}</td>
-        <td>{{ deal.clients[0].firstName }}</td>
-        <td>{{ deal.clients[0].lastName }}</td>
-        <td><a href="#" ng-click="orderCtrl.removeDeal(deal)"><span class="glyphicon glyphicon-remove"></span></a></td>
+    <tr ng-repeat="order in ordersList">
+        <td ng-click="orderCtrl.editOrderModal(order)">{{ order.id }}</td>
+        <td ng-click="orderCtrl.editOrderModal(order)">{{ order.info }}</td>
+        <td ng-click="orderCtrl.editOrderModal(order)">{{ order.clients[0].firstName }}</td>
+        <td ng-click="orderCtrl.editOrderModal(order)">{{ order.clients[0].lastName }}</td>
+        <td><a href="#" ng-click="orderCtrl.removeOrder(order)"><span class="glyphicon glyphicon-remove"></span></a></td>
     </tr>
     </tbody>
 </table>
@@ -22,9 +21,9 @@
 <div id="pagination" class="row">
     <button class="btn btn-primary btn-sm"
             ng-disabled="orderCtrl.firstPage()" ng-click="orderCtrl.pageBack()">Назад</button>
-    <span>{{ orderCtrl.currentPage + 1 }} из {{ orderCtrl.numberOfPages() }}</span>
+    <span>{{ currentPage + 1 }} из {{ orderCtrl.numberOfPages() }}</span>
     <button class="btn btn-primary btn-sm"
             ng-disabled="orderCtrl.lastPage()" ng-click="orderCtrl.pageForward()">Вперед</button>
 </div>
 
-<input type="button" class="btn btn-default act-add-deal" ng-click="orderCtrl.editDealModal()" value="Добавить заказ">
+<input type="button" class="btn btn-default act-add-order" ng-click="orderCtrl.editOrderModal()" value="Добавить заказ">
